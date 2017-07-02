@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts a:f:p:c:u:p:t:e:b:n:x: option
+while getopts a:f:p:c:u:p:t:e:b:n:x:h:i: option
 do
  case "${option}"
  in
@@ -13,6 +13,8 @@ do
 	e) CERTID=${OPTARG};;
 	b) BUNDLEID=${OPTARG};;
 	n) APPNAME=${OPTARG};;
+	h) HOCKEYAPPID=${OPTARG};;
+	i) HOCKEYTOKEN=${OPTARG};;
  esac
 done
 echo $ACTION
@@ -32,6 +34,10 @@ if [[ "$ACTION" = *"version"* ]]; then
 			/usr/libexec/PlistBuddy -c "Set :CFBundleVersion $NEWVERSIONSTRING" "$f"
 		fi
 	done
+fi
+
+if [[ "$ACTION" = *"set-bundle"* ]]; then
+	/usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $BUNDLEID" "$PROJECTNAME/Info.plist"
 fi
 
 if [[ "$ACTION" = *"provision"* ]]; then
@@ -65,5 +71,8 @@ if [[ "$ACTION" = *"compile"* ]]; then
 		echo "compiling complete"
 fi
 
+if [[ "$ACTION" = *"hockeyapp"* ]]; then
+	curl -F "status=2" -F "notify=0" -F "ipa=@build/$PROJECTNAME.ipa" -H "X-HockeyAppToken: $HOCKEYTOKEN"  "https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPPID/app_versions/upload"
+fi
 
 echo $USER
