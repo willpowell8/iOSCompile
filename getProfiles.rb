@@ -26,9 +26,9 @@ begin
     cert = Spaceship.certificate.find(ARGV[3])
     apps = Array.new
     apps.push([bundleId, appName, "main"])
-    apps.push([bundleId+".watchkitapp", appName+" watchkitapp", "watchkit"])
-    apps.push([bundleId+".watchkitapp.watchkitextension", appName+" watchkitapp extension", "watchkitext"])
-    apps.push([bundleId+".Today", appName+" today", "today"])
+    #apps.push([bundleId+".watchkitapp", appName+" watchkitapp", "watchkit"])
+    #apps.push([bundleId+".watchkitapp.watchkitextension", appName+" watchkitapp extension", "watchkitext"])
+    #apps.push([bundleId+".Today", appName+" today", "today"])
     
     apps.each do |app| 
     	appBundleId = app[0]
