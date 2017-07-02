@@ -68,7 +68,7 @@ if [[ "$ACTION" = *"compile"* ]]; then
     	xcodebuild -configuration "$CONFIGRUATION" -workspace "$PROJECTNAME.xcworkspace" -scheme $PROJECTNAME clean archive -archivePath "$PROJECTNAME.xcarchive"
     	xcrun xcodebuild -exportArchive -exportPath build/  -archivePath "$PROJECTNAME.xcarchive" -exportOptionsPlist exportOptions.plist -configuration Enterprise
 			echo "compiling complete"
-		else; do
+		else
 			echo "no format specified"
 		fi
 		
