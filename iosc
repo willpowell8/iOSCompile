@@ -18,6 +18,7 @@ do
  esac
 done
 echo $ACTION
+echo $PROJECTNAME
 if [[ "$ACTION" = *"version"* ]]; then
 	VERSIONNUM=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" "`pwd`/$PROJECTNAME/Info.plist")
 	NEWSUBVERSION=`echo $VERSIONNUM | awk -F "." '{print $3}'`
