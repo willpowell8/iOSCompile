@@ -39,15 +39,15 @@ fi
 if [[ "$ACTION" = *"set-bundle"* ]]; then
 	/usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $BUNDLEID" "$PROJECTNAME/Info.plist"
 fi
-
 if [[ "$ACTION" = *"provision"* ]]; then
     echo "provisioning ..."
-    echo "rvm use 2.3; ruby getProfiles.rb $APPLEUSER $APPLEPASSWORD $TEAMID $CERTID $BUNDLEID '$APPNAME';rvm use system"
-    bash -lc "rvm use 2.3; ruby getProfiles.rb $APPLEUSER $APPLEPASSWORD $TEAMID $CERTID $BUNDLEID '$APPNAME';rvm use system"
+    echo "rvm use 2.3; ruby  `dirname $0`/getProfiles.rb $APPLEUSER $APPLEPASSWORD $TEAMID $CERTID $BUNDLEID '$APPNAME';rvm use system"
+   	bash -lc "rvm use 2.3; ruby `dirname $0`/getProfiles.rb $APPLEUSER $APPLEPASSWORD $TEAMID $CERTID $BUNDLEID '$APPNAME';rvm use system"
     #install mobile provisioning profiles
     DIRECTORY=.
     for i in $DIRECTORY/*.mobileprovision; do
         # Process $i
+        echo $i
         uuid=`grep UUID -A1 -a $i | grep -io "[-A-Z0-9]\{36\}"`
         cp "$i" ~/Library/MobileDevice/Provisioning\ Profiles/$uuid.mobileprovision
     done
@@ -67,10 +67,14 @@ if [[ "$ACTION" = *"compile"* ]]; then
     	echo "ENTERPRISE"
     	xcodebuild -configuration "$CONFIGRUATION" -workspace "$PROJECTNAME.xcworkspace" -scheme $PROJECTNAME clean archive -archivePath "$PROJECTNAME.xcarchive"
     	xcrun xcodebuild -exportArchive -exportPath build/  -archivePath "$PROJECTNAME.xcarchive" -exportOptionsPlist exportOptions.plist -configuration Enterprise
+			echo "compiling complete"
+		else; do
+			echo "no format specified"
 		fi
-		echo "compiling complete"
+		
 fi
 
+# DEPLOYMENTS
 if [[ "$ACTION" = *"hockeyapp"* ]]; then
 	curl -F "status=2" -F "notify=0" -F "ipa=@build/$PROJECTNAME.ipa" -H "X-HockeyAppToken: $HOCKEYTOKEN"  "https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPPID/app_versions/upload"
 fi
