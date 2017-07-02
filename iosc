@@ -1,0 +1,51 @@
+#!/bin/bash
+while getopts a:f:p:c:u:p:t:e:b:n:x: option
+do
+ case "${option}"
+ in
+ 	a) ACTION=${OPTARG};;
+ 	f) FORMAT=${OPTARG};;
+ 	x) PROJECTNAME=${OPTARG};;
+	c) CONFIGRUATION=${OPTARG};;
+	u) APPLEUSER=${OPTARG};;
+	p) APPLEPASSWORD=${OPTARG};;
+	t) TEAMID=${OPTARG};;
+	e) CERTID=${OPTARG};;
+	b) BUNDLEID=${OPTARG};;
+	n) APPNAME=${OPTARG};;
+ esac
+done
+echo $ACTION
+if [ "$ACTION" = "provision" ]; then
+    echo "provisioning ..."
+    echo "rvm use 2.3; ruby getProfiles.rb $APPLEUSER $APPLEPASSWORD $TEAMID $CERTID $BUNDLEID '$APPNAME';rvm use system"
+    bash -lc "rvm use 2.3; ruby getProfiles.rb $APPLEUSER $APPLEPASSWORD $TEAMID $CERTID $BUNDLEID '$APPNAME';rvm use system"
+    #install mobile provisioning profiles
+    DIRECTORY=.
+    for i in $DIRECTORY/*.mobileprovision; do
+        # Process $i
+        uuid=`grep UUID -A1 -a $i | grep -io "[-A-Z0-9]\{36\}"`
+        cp "$i" ~/Library/MobileDevice/Provisioning\ Profiles/$uuid.mobileprovision
+    done
+    echo "provisioning complete"
+fi
+
+if [ "$ACTION" = "compile" ]; then
+    echo "compiling ..."
+    if [ -e Podfile ]; then
+		    echo "Cocoapods detected"
+		    export LANG=en_US.UTF-8
+				gem install cocoapods
+				rm -rf Pods/
+		    pod update
+		fi
+    if [ "$FORMAT" = "enterprise" ]; then
+    	echo "ENTERPRISE"
+    	xcodebuild -configuration "$CONFIGRUATION" -workspace "$PROJECTNAME.xcworkspace" -scheme $PROJECTNAME clean archive -archivePath "$PROJECTNAME.xcarchive"
+    	xcrun xcodebuild -exportArchive -exportPath build/  -archivePath "$PROJECTNAME.xcarchive" -exportOptionsPlist exportOptions.plist -configuration Enterprise
+		fi
+		echo "compiling complete"
+fi
+
+
+echo $USER
