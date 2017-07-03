@@ -17,22 +17,19 @@ do
 	i) HOCKEYTOKEN=${OPTARG};;
  esac
 done
-echo $ACTION
-echo $PROJECTNAME
 if [[ "$ACTION" = *"version"* ]]; then
 	VERSIONNUM=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" "`pwd`/$PROJECTNAME/Info.plist")
 	NEWSUBVERSION=`echo $VERSIONNUM | awk -F "." '{print $3}'`
 	NEWSUBVERSION=$(($NEWSUBVERSION + 1))
 	NEWVERSIONSTRING=`echo $VERSIONNUM | awk -F "." '{print $1 "." $2 ".'$NEWSUBVERSION'" }'`
-	echo "UPDATED VERSION $NEWVERSIONSTRING"
 	FILES=$(find . -type f -name '*Info*.plist')
 	for f in $FILES; do 
 		if [[ "$f" = *"Pods"* ]]; then
-			echo "POD"
+			echo ""
 		elif [[ "$f" = *"Support"* ]]; then
-			echo "Support"
+			echo ""
 		else
-			echo $f
+			#echo $f
 			/usr/libexec/PlistBuddy -c "Set :CFBundleVersion $NEWVERSIONSTRING" "`pwd`/$f"
 		fi
 	done
@@ -67,7 +64,7 @@ if [[ "$ACTION" = *"compile"* ]]; then
 		fi
     if [ "$FORMAT" = "enterprise" ]; then
     	echo "ENTERPRISE"
-    	xcodebuild -configuration "$CONFIGRUATION" -workspace "$PROJECTNAME.xcworkspace" -scheme $PROJECTNAME clean archive -archivePath "$PROJECTNAME.xcarchive"
+    	xcodebuild -quiet -configuration "$CONFIGRUATION" -workspace "$PROJECTNAME.xcworkspace" -scheme $PROJECTNAME clean archive -archivePath "$PROJECTNAME.xcarchive"
     	xcrun xcodebuild -exportArchive -exportPath build/  -archivePath "$PROJECTNAME.xcarchive" -exportOptionsPlist exportOptions.plist -configuration Enterprise
 			echo "compiling complete"
 		else
