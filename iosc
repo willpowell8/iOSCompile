@@ -64,6 +64,7 @@ if [[ "$ACTION" = *"compile"* ]]; then
 		fi
     if [ "$FORMAT" = "enterprise" ]; then
     	echo "ENTERPRISE"
+    	source ~/.rvm/scripts/rvm
     	rvm use system
     	xcodebuild -quiet -configuration "$CONFIGRUATION" -workspace "$PROJECTNAME.xcworkspace" -scheme $PROJECTNAME clean archive -archivePath "$PROJECTNAME.xcarchive"
     	xcrun xcodebuild -exportArchive -exportPath build/  -archivePath "$PROJECTNAME.xcarchive" -exportOptionsPlist exportOptions.plist -configuration Enterprise
