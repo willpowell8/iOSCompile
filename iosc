@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts a:f:p:c:u:p:t:e:b:n:x:h:i: option
+while getopts a:f:p:c:u:p:t:e:b:n:x:h:i:g: option
 do
  case "${option}"
  in
@@ -15,6 +15,7 @@ do
 	n) APPNAME=${OPTARG};;
 	h) HOCKEYAPPID=${OPTARG};;
 	i) HOCKEYTOKEN=${OPTARG};;
+	g) GIT=${OPTARG};;
  esac
 done
 if [[ "$ACTION" = *"version"* ]]; then
@@ -31,8 +32,14 @@ if [[ "$ACTION" = *"version"* ]]; then
 		else
 			#echo $f
 			/usr/libexec/PlistBuddy -c "Set :CFBundleVersion $NEWVERSIONSTRING" "`pwd`/$f"
+			if [ "$GIT" = "commit" ]; then
+				git commit -m "Version: $NEWVERSIONSTRING" "$f"
+			fi
 		fi
 	done
+	if [ "$GIT" = "commit" ]; then
+		git push
+	fi
 fi
 
 if [[ "$ACTION" = *"set-bundle"* ]]; then
