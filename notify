@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+while getopts c:m: option
+do
+ case "${option}"
+ in
+ 	c) CHAT=${OPTARG};;
+ 	m) MESSAGE=${OPTARG};;
+ esac
+done
+curl -i -H "Accept: application/json" -H "Content-Type:application/json" -X POST --data '{"body":"'$MESSAGE'"}' https://www.localizationkit.com/bot/chat/$CHAT
