@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 while getopts a:f:p:c:u:p:t:e:b:n:x:h:i:g: option
 do
  case "${option}"
