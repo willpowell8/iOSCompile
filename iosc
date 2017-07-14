@@ -72,6 +72,11 @@ if [[ "$ACTION" = *"compile"* ]]; then
 		    PROJECTEXTENSION="xcworkspace"
 		fi
     if [ "$FORMAT" = "enterprise" ]; then
+    	if [ -e "exportOptions.plist" ]; then
+
+    	else
+    		echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\"> <plist version=\"1.0\"> <dict> <key>method</key> <string>enterprise</string> <key>compileBitcode</key> <false/> <key>uploadBitcode</key> <false/> </dict> </plist>" >> "exportOptions.plist" 
+    	fi
     	echo "ENTERPRISE"
     	source ~/.rvm/scripts/rvm
     	rvm use system
