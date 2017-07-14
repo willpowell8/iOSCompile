@@ -1,5 +1,5 @@
 #!/bin/bash
-while getopts a:f:p:c:u:p:t:e:b:n:x:h:i:g: option
+while getopts a:f:p:c:u:p:t:e:b:n:x:h:i:g:s: option
 do
  case "${option}"
  in
@@ -16,6 +16,7 @@ do
 	h) HOCKEYAPPID=${OPTARG};;
 	i) HOCKEYTOKEN=${OPTARG};;
 	g) GIT=${OPTARG};;
+	s) SCHEME=${OPTARG};;
  esac
 done
 if [[ "$ACTION" = *"version"* ]]; then
@@ -80,7 +81,7 @@ if [[ "$ACTION" = *"compile"* ]]; then
     	echo "ENTERPRISE"
     	source ~/.rvm/scripts/rvm
     	rvm use system
-    	xcodebuild -quiet -configuration "$CONFIGRUATION" -workspace "$PROJECTNAME.$PROJECTEXTENSION" -scheme $PROJECTNAME clean archive -archivePath "$PROJECTNAME.xcarchive"
+    	xcodebuild -quiet -configuration "$CONFIGRUATION" -workspace "$PROJECTNAME.$PROJECTEXTENSION" -scheme "$SCHEME" clean archive -archivePath "$PROJECTNAME.xcarchive"
     	xcrun xcodebuild -exportArchive -exportPath build/  -archivePath "$PROJECTNAME.xcarchive" -exportOptionsPlist exportOptions.plist -configuration Enterprise
 			echo "compiling complete"
 		else
