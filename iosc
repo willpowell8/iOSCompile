@@ -92,7 +92,7 @@ fi
 
 # DEPLOYMENTS
 if [[ "$ACTION" = *"hockeyapp"* ]]; then
-	curl -F "status=2" -F "notify=0" -F "ipa=@build/$PROJECTNAME.ipa" -H "X-HockeyAppToken: $HOCKEYTOKEN"  "https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPPID/app_versions/upload"
+	curl -F "status=2" -F "notify=0" -F "ipa=@build/$SCHEME.ipa" -H "X-HockeyAppToken: $HOCKEYTOKEN"  "https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPPID/app_versions/upload"
 fi
 
 echo $USER
