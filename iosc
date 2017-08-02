@@ -96,7 +96,12 @@ if [[ "$ACTION" = *"hockeyapp"* ]]; then
 	curl -F "status=2" -F "notify=0" -F "ipa=@build/$SCHEME.ipa" -H "X-HockeyAppToken: $HOCKEYTOKEN"  "https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPPID/app_versions/upload"
 fi
 if [[ "$ACTION" = *"skype"* ]]; then
-	curl -d '{"body":"build $APPNAME"}' -H "Content-Type: application/json" -X POST "https://www.localizationkit.com/bot/chat/$SKYPECHAT"
+	if [ -e "build/$SCHEME.ipa" ]; then
+		curl -d "{\"body\":\"FAILED: build $APPNAME\"}" -H "Content-Type: application/json" -X POST "https://www.localizationkit.com/bot/chat/$SKYPECHAT"
+	else
+		VERSIONNUM2=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" "`pwd`/$PROJECTNAME/Info.plist")
+		curl -d "{\"body\":\"COMPLETED: build $APPNAME version $VERSIONNUM2\"}" -H "Content-Type: application/json" -X POST "https://www.localizationkit.com/bot/chat/$SKYPECHAT"
+	fi
 fi
 
 echo $USER
