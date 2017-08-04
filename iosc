@@ -99,10 +99,10 @@ if [[ "$ACTION" = *"hockeyapp"* ]]; then
 fi
 if [[ "$ACTION" = *"skype"* ]]; then
 	if [ -e "build/$SCHEME.ipa" ]; then
-		curl -d "{\"body\":\"FAILED: build $APPNAME\"}" -H "Content-Type: application/json" -X POST "https://www.localizationkit.com/bot/chat/$SKYPECHAT"
-	else
 		VERSIONNUM2=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" "`pwd`/$PROJECTNAME/Info.plist")
 		curl -d "{\"body\":\"COMPLETED: build $APPNAME version $VERSIONNUM2\"}" -H "Content-Type: application/json" -X POST "https://www.localizationkit.com/bot/chat/$SKYPECHAT"
+	else
+		curl -d "{\"body\":\"FAILED: build $APPNAME\"}" -H "Content-Type: application/json" -X POST "https://www.localizationkit.com/bot/chat/$SKYPECHAT"
 	fi
 fi
 
