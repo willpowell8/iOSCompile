@@ -37,7 +37,7 @@ if [[ "$ACTION" = *"version"* ]]; then
 			#echo $f
 			/usr/libexec/PlistBuddy -c "Set :CFBundleVersion $NEWVERSIONSTRING" "`pwd`/$f" || true
 			if [ "$GIT" = "commit" ]; then
-				git commit -m "Version: $NEWVERSIONSTRING" "$f"
+				git commit -m "Version: $NEWVERSIONSTRING" "$f" || true
 			fi
 		fi
 	done
