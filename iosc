@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-while getopts a:f:p:c:u:p:t:e:b:n:x:h:i:g:s:y: option
+while getopts a:f:p:c:u:p:t:e:b:n:x:h:i:j:g:s:y: option
 do
  case "${option}"
  in
@@ -17,6 +17,7 @@ do
 	n) APPNAME=${OPTARG};;
 	h) HOCKEYAPPID=${OPTARG};;
 	i) HOCKEYTOKEN=${OPTARG};;
+	j) RELEASENOTE=${OPTARG};;
 	g) GIT=${OPTARG};;
 	s) SCHEME=${OPTARG};;
 	y) SKYPECHAT=${OPTARG}
@@ -96,7 +97,7 @@ fi
 
 # DEPLOYMENTS
 if [[ "$ACTION" = *"hockeyapp"* ]]; then
-	curl -F "status=2" -F "notify=0" -F "ipa=@build/$SCHEME.ipa" -H "X-HockeyAppToken: $HOCKEYTOKEN"  "https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPPID/app_versions/upload"
+	curl -F "status=2" -F "notify=0" -F "ipa=@build/$SCHEME.ipa" -H "X-HockeyAppToken: $HOCKEYTOKEN" -F "notes=$RELEASENOTE" \  "https://rink.hockeyapp.net/api/2/apps/$HOCKEYAPPID/app_versions/upload"
 fi
 if [[ "$ACTION" = *"skype"* ]]; then
 	if [ -e "build/$SCHEME.ipa" ]; then
