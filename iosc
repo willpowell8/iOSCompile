@@ -81,7 +81,7 @@ if [[ "$ACTION" = *"compile"* ]]; then
     if [ -e Podfile ]; then
 		    echo "Cocoapods detected"
 		    export LANG=en_US.UTF-8
-				gem install cocoapods
+				gem install cocoapods --pre
 				rm -rf Pods/
 		    pod update
 		    PROJECTEXTENSION="xcworkspace"
